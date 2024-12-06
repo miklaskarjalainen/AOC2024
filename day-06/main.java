@@ -347,7 +347,7 @@ class AOC2024
         }
 
         while (map.step()) {}
-        System.err.println(map.toString());
+        System.out.println(map.toString());
 
         System.out.println("Part1 result: " + map.getTravelDistance());
         List<Vector2> traveled = map.getTravelArray();
