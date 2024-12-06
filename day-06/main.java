@@ -1,6 +1,6 @@
-import java.io.File;  // Import the File class
-import java.io.FileNotFoundException;  // Import the File class
-import java.util.Scanner; // Import the Scanner class to read text files
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -178,7 +178,6 @@ class Map {
             default -> {}
         }
 
-
         return true;
     }
 
@@ -321,7 +320,6 @@ class AOC2024
 
     public static void main(String []args) {
         String content = read_file("./input.txt");
-        
         int height = (int)content.lines().count();
         int width = (int)content.length() / height;
 
@@ -348,22 +346,13 @@ class AOC2024
             }
         }
 
-        /*
-        map.setTile(100, 67, 'O');
-        for (int i = 0; i < 10000; i++) {
-            map.step();
-        }
-        System.err.println(map.doesGuardLoop());
-        */
-
         while (map.step()) {}
+        System.err.println(map.toString());
 
         System.out.println("Part1 result: " + map.getTravelDistance());
-
         List<Vector2> traveled = map.getTravelArray();
         int loop_variations = 0;
         for (Vector2 pos : traveled) {
-
             map.clearTravel();
             if (!map.setTile(pos.x, pos.y, '#')) {
                 continue;
