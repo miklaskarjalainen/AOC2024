@@ -1,32 +1,3 @@
-local function serializeTable(val, name, skipnewlines, depth)
-    skipnewlines = skipnewlines or false
-    depth = depth or 0
-
-    local tmp = string.rep(" ", depth)
-
-    if name then tmp = tmp .. name .. " = " end
-
-    if type(val) == "table" then
-        tmp = tmp .. "{" .. (not skipnewlines and "\n" or "")
-
-        for k, v in pairs(val) do
-            tmp =  tmp .. serializeTable(v, k, skipnewlines, depth + 1) .. "," .. (not skipnewlines and "\n" or "")
-        end
-
-        tmp = tmp .. string.rep(" ", depth) .. "}"
-    elseif type(val) == "number" then
-        tmp = tmp .. tostring(val)
-    elseif type(val) == "string" then
-        tmp = tmp .. string.format("%q", val)
-    elseif type(val) == "boolean" then
-        tmp = tmp .. (val and "true" or "false")
-    else
-        tmp = tmp .. "\"[inserializeable datatype:" .. type(val) .. "]\""
-    end
-
-    return tmp
-end
-
 local function has_value (tab, val)
     for index, value in ipairs(tab) do
         if value == val then
@@ -85,7 +56,7 @@ local function parse_file(fPath)
 end
 
 -- Fixes up to one rule breaking, and returns true if did something
-local function correctly_ordered(rules, update)
+local function correctly_ordered(rules, update, fix)
     for i1, v1 in pairs(update) do
         local rule_array = rules[v1]
         if rule_array == nil then goto continue end
@@ -97,8 +68,13 @@ local function correctly_ordered(rules, update)
 
             -- Now we know that the v1 and v2 have a rule defined.
             if i1 > i2 then
+                if fix then
+                    -- Just do a swap
+                    update[i1], update[i2] = update[i2], update[i1]
+                end
+
                 return false
-            end 
+            end
 
             ::c2::
         end
@@ -110,18 +86,18 @@ end
 
 -- Logic
 local rules, updates = parse_file("./input.txt")
-local result = 0
+local p1_result = 0
+local p2_result = 0
 
 for _, update in pairs(updates) do
-    if correctly_ordered(rules, update) then
-        result = result + update[math.ceil(#update/2)]
-        print("Correct: " .. _)
+    if correctly_ordered(rules, update, false) then
+        p1_result = p1_result + update[math.ceil(#update/2)]
+    else
+        while not correctly_ordered(rules, update, true) do end
+        p2_result = p2_result + update[math.ceil(#update/2)]
     end
 
-    -- process_updates(rules, update)
 end
 
-print(serializeTable(updates))
-print(result)
-
-
+print("Part1: " .. p1_result)
+print("Part2: " .. p2_result)
